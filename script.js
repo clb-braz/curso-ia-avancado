@@ -24,20 +24,6 @@ window.onclick = function(event) {
     }
 }
 
-// Parallax effect
-document.addEventListener('mousemove', (e) => {
-    const parallaxBg = document.getElementById('parallax-bg');
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    
-    const moveX = (mouseX - windowWidth / 2) * 0.02;
-    const moveY = (mouseY - windowHeight / 2) * 0.02;
-    
-    parallaxBg.style.transform = `translate(${moveX}px, ${moveY}px)`;
-});
-
 // Fade in animations on scroll
 document.addEventListener('DOMContentLoaded', () => {
     const fadeElements = document.querySelectorAll('.fade-in');
@@ -55,7 +41,21 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     window.addEventListener('scroll', fadeInOnScroll);
-    fadeInOnScroll(); // Initial check
+    fadeInOnScroll();
+});
+
+// Parallax effect
+document.addEventListener('mousemove', (e) => {
+    const parallaxBg = document.getElementById('parallax-bg');
+    const mouseX = e.clientX;
+    const mouseY = e.clientY;
+    const windowWidth = window.innerWidth;
+    const windowHeight = window.innerHeight;
+    
+    const moveX = (mouseX - windowWidth / 2) * 0.02;
+    const moveY = (mouseY - windowHeight / 2) * 0.02;
+    
+    parallaxBg.style.transform = `translate(${moveX}px, ${moveY}px)`;
 });
 
 // Neural network background animation
@@ -375,4 +375,115 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         binaryOverlay.setAttribute('data-binary', binaryString);
     }
+});
+
+// Background video handler
+document.addEventListener('DOMContentLoaded', function() {
+    const iframe = document.querySelector('#video-bg iframe');
+    
+    // Recarrega o iframe se necessário
+    function reloadIframe() {
+        const currentSrc = iframe.src;
+        iframe.src = currentSrc;
+    }
+    
+    // Tenta recarregar o iframe após 2 segundos se necessário
+    setTimeout(reloadIframe, 2000);
+    
+    // Ajusta o tamanho do iframe quando a janela é redimensionada
+    function adjustIframeSize() {
+        const windowWidth = window.innerWidth;
+        const windowHeight = window.innerHeight;
+        const windowRatio = windowWidth / windowHeight;
+        const videoRatio = 16 / 9;
+        
+        if (windowRatio < videoRatio) {
+            const height = windowWidth / videoRatio;
+            iframe.style.width = windowWidth * 2 + 'px';
+            iframe.style.height = height * 2 + 'px';
+        } else {
+            const width = windowHeight * videoRatio;
+            iframe.style.width = width * 2 + 'px';
+            iframe.style.height = windowHeight * 2 + 'px';
+        }
+    }
+    
+    window.addEventListener('resize', adjustIframeSize);
+    adjustIframeSize();
+});
+
+// Função para expandir/recolher o card de criptomoedas
+function expandCard(card) {
+    // Criar overlay se não existir
+    let overlay = document.querySelector('.crypto-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'crypto-overlay';
+        document.body.appendChild(overlay);
+    }
+
+    // Adicionar botão de fechar se não existir
+    if (card.classList.contains('crypto-card') && !card.querySelector('.close-btn')) {
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'close-btn';
+        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+        closeBtn.onclick = (e) => {
+            e.stopPropagation();
+            collapseCard(card);
+        };
+        card.appendChild(closeBtn);
+    }
+
+    // Toggle da expansão
+    if (card.classList.contains('expanded')) {
+        collapseCard(card);
+    } else {
+        card.classList.add('expanded');
+        overlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+// Função para recolher o card
+function collapseCard(card) {
+    card.classList.remove('expanded');
+    const overlay = document.querySelector('.crypto-overlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    document.body.style.overflow = '';
+}
+
+// Fechar card ao clicar no overlay
+document.addEventListener('click', (e) => {
+    if (e.target.classList.contains('crypto-overlay')) {
+        const expandedCard = document.querySelector('.crypto-card.expanded');
+        if (expandedCard) {
+            collapseCard(expandedCard);
+        }
+    }
+});
+
+// Fechar card com a tecla ESC
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+        const expandedCard = document.querySelector('.crypto-card.expanded');
+        if (expandedCard) {
+            collapseCard(expandedCard);
+        }
+    }
+});
+
+// Animação suave para os elementos do card
+document.querySelectorAll('.feature-section').forEach((section, index) => {
+    section.style.animationDelay = `${index * 0.1}s`;
+});
+
+// Prevenir propagação de cliques nos botões dentro do card
+document.querySelectorAll('.feature-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        // Aqui você pode adicionar a lógica para cada botão
+        alert('Funcionalidade em desenvolvimento!');
+    });
 }); 
