@@ -412,78 +412,17 @@ document.addEventListener('DOMContentLoaded', function() {
     adjustIframeSize();
 });
 
-// Função para expandir/recolher o card de criptomoedas
-function expandCard(card) {
-    // Criar overlay se não existir
-    let overlay = document.querySelector('.crypto-overlay');
-    if (!overlay) {
-        overlay = document.createElement('div');
-        overlay.className = 'crypto-overlay';
-        document.body.appendChild(overlay);
-    }
-
-    // Adicionar botão de fechar se não existir
-    if (card.classList.contains('crypto-card') && !card.querySelector('.close-btn')) {
-        const closeBtn = document.createElement('button');
-        closeBtn.className = 'close-btn';
-        closeBtn.innerHTML = '<i class="fas fa-times"></i>';
-        closeBtn.onclick = (e) => {
-            e.stopPropagation();
-            collapseCard(card);
-        };
-        card.appendChild(closeBtn);
-    }
-
-    // Toggle da expansão
-    if (card.classList.contains('expanded')) {
-        collapseCard(card);
-    } else {
-        card.classList.add('expanded');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-}
-
-// Função para recolher o card
-function collapseCard(card) {
-    card.classList.remove('expanded');
-    const overlay = document.querySelector('.crypto-overlay');
-    if (overlay) {
-        overlay.classList.remove('active');
-    }
-    document.body.style.overflow = '';
-}
-
-// Fechar card ao clicar no overlay
-document.addEventListener('click', (e) => {
-    if (e.target.classList.contains('crypto-overlay')) {
-        const expandedCard = document.querySelector('.crypto-card.expanded');
-        if (expandedCard) {
-            collapseCard(expandedCard);
-        }
-    }
-});
-
-// Fechar card com a tecla ESC
-document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-        const expandedCard = document.querySelector('.crypto-card.expanded');
-        if (expandedCard) {
-            collapseCard(expandedCard);
-        }
-    }
-});
-
-// Animação suave para os elementos do card
-document.querySelectorAll('.feature-section').forEach((section, index) => {
-    section.style.animationDelay = `${index * 0.1}s`;
-});
-
-// Prevenir propagação de cliques nos botões dentro do card
-document.querySelectorAll('.feature-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        // Aqui você pode adicionar a lógica para cada botão
-        alert('Funcionalidade em desenvolvimento!');
+// Mantendo apenas as funções básicas dos cards
+document.addEventListener('DOMContentLoaded', function() {
+    const cards = document.querySelectorAll('.creative-card');
+    
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.03)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
     });
 }); 
