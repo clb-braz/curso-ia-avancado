@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Radar Cripto - Oportunidades em Tempo Real</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="radar-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tradingview-widget-api"></script>
+</head>
+<body class="radar-page">
+    <canvas id="matrixRain"></canvas>
+    <div class="animated-background">
+        <div class="matrix-bg"></div>
+        <div class="neural-lines"></div>
+        <div class="glow-overlay"></div>
+    </div>
+    <div class="background-overlay"></div>
+
+    <header>
+        <nav>
+            <div class="logo fade-in">
+                <a href="index.html">O Futuro das Finanças é Agora</a>
+            </div>
+            <button class="contact-btn fade-in" onclick="showContact()">
+                <i class="fas fa-envelope"></i> Contato
+            </button>
+        </nav>
+    </header>
+
+    <main class="radar-main">
+        <section class="radar-hero">
+            <h1 class="cyber-title">Radar Cripto <span class="pulse-dot">•</span></h1>
+            <p class="subtitle">Oportunidades em Tempo Real</p>
+        </section>
+
+        <!-- Seção 1: Tendências do Mercado -->
+        <section class="market-trends section-grid">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-line"></i> Tendências do Mercado</h2>
+            </div>
+            
+            <div class="grid-container">
+                <!-- Dashboard de Tokens -->
+                <div class="grid-item market-dashboard">
+                    <h3>Top Movers</h3>
+                    <div class="token-list">
+                        <div class="token-item gainers">
+                            <!-- Será preenchido via JavaScript -->
+                        </div>
+                        <div class="token-item losers">
+                            <!-- Será preenchido via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Fear & Greed Index -->
+                <div class="grid-item fear-greed">
+                    <h3>Fear & Greed Index</h3>
+                    <div class="index-display">
+                        <canvas id="fearGreedGauge"></canvas>
+                        <div class="index-value">
+                            <!-- Será preenchido via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Breaking News -->
+                <div class="grid-item breaking-news">
+                    <h3>Últimas Notícias</h3>
+                    <div class="news-ticker">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Influencer Feed -->
+                <div class="grid-item influencer-feed">
+                    <h3>Insights dos Especialistas</h3>
+                    <div class="feed-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 2: Análises Técnicas -->
+        <section class="technical-analysis section-grid">
+            <div class="section-header">
+                <h2><i class="fas fa-chart-bar"></i> Análises Técnicas</h2>
+            </div>
+            
+            <div class="grid-container">
+                <!-- Sinais de Trading -->
+                <div class="grid-item trading-signals">
+                    <h3>Sinais de Trading</h3>
+                    <div class="signals-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Gráfico Interativo -->
+                <div class="grid-item interactive-chart">
+                    <h3>Gráfico BTC/USD</h3>
+                    <div class="tradingview-widget-container">
+                        <!-- TradingView Widget será inserido aqui -->
+                    </div>
+                </div>
+
+                <!-- Alertas Técnicos -->
+                <div class="grid-item technical-alerts">
+                    <h3>Alertas Técnicos</h3>
+                    <div class="alerts-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Volume e Liquidez -->
+                <div class="grid-item market-metrics">
+                    <h3>Métricas de Mercado</h3>
+                    <div class="metrics-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 3: Renda Passiva -->
+        <section class="passive-income section-grid">
+            <div class="section-header">
+                <h2><i class="fas fa-coins"></i> Oportunidades de Renda Passiva</h2>
+            </div>
+            
+            <div class="grid-container">
+                <!-- Staking Pools -->
+                <div class="grid-item staking-pools">
+                    <h3>Melhores Pools de Staking</h3>
+                    <div class="pools-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Airdrops -->
+                <div class="grid-item airdrops">
+                    <h3>Airdrops Ativos</h3>
+                    <div class="airdrops-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- DeFi Yields -->
+                <div class="grid-item defi-yields">
+                    <h3>Rendimentos DeFi</h3>
+                    <div class="yields-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Yield Farming -->
+                <div class="grid-item yield-farming">
+                    <h3>Comparativo de Plataformas</h3>
+                    <div class="platforms-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 4: Lançamentos -->
+        <section class="launches section-grid">
+            <div class="section-header">
+                <h2><i class="fas fa-rocket"></i> Próximos Lançamentos</h2>
+            </div>
+            
+            <div class="grid-container">
+                <!-- Calendário de ICOs -->
+                <div class="grid-item ico-calendar">
+                    <h3>Calendário de Pré-vendas</h3>
+                    <div class="calendar-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Análises de Projetos -->
+                <div class="grid-item project-analysis">
+                    <h3>Análises de Projetos</h3>
+                    <div class="analysis-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Whitelists -->
+                <div class="grid-item whitelists">
+                    <h3>Whitelists Abertas</h3>
+                    <div class="whitelist-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Tendências Futuras -->
+                <div class="grid-item future-trends">
+                    <h3>Tendências Emergentes</h3>
+                    <div class="trends-container">
+                        <!-- Será preenchido via JavaScript -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção 5: Área VIP -->
+        <section class="vip-section section-grid">
+            <div class="section-header">
+                <h2><i class="fas fa-crown"></i> Área VIP</h2>
+            </div>
+            
+            <div class="vip-container">
+                <div class="vip-card">
+                    <div class="vip-header">
+                        <h3>Acesso Premium</h3>
+                        <div class="vip-price">R$ 197/mês</div>
+                    </div>
+                    <div class="vip-features">
+                        <ul>
+                            <li><i class="fas fa-check"></i> Relatórios exclusivos diários</li>
+                            <li><i class="fas fa-check"></i> Recomendações personalizadas</li>
+                            <li><i class="fas fa-check"></i> Canal VIP no Telegram</li>
+                            <li><i class="fas fa-check"></i> Webinars semanais</li>
+                            <li><i class="fas fa-check"></i> Suporte prioritário</li>
+                        </ul>
+                    </div>
+                    <button class="vip-button">
+                        Assinar Agora
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de contato -->
+    <div id="contact-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="hideContact()">&times;</span>
+            <h2>Contato</h2>
+            <p><i class="fas fa-envelope"></i> deepseekcriptohub@protonmail.com</p>
+        </div>
+    </div>
+
+    <script src="matrix.js"></script>
+    <script src="radar.js"></script>
+</body>
+</html> 
