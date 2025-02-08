@@ -1,78 +1,139 @@
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const path = require('path');
+const compression = require('compression');
+const Redis = require('ioredis');
+const { Worker } = require('worker_threads');
+const WebSocket = require('ws');
+const os = require('os');
 
-// Cache para arquivos estáticos
-const fileCache = new Map();
+// Configuração do Redis
+const redis = new Redis({
+    host: process.env.NODE_ENV === 'production' ? 'redis' : 'localhost',
+    port: 6379
+});
 
-const server = http.createServer((req, res) => {
-    // Normaliza o caminho da URL
-    let filePath = '.' + req.url;
-    if (filePath === './') {
-        filePath = './index.html';
-    }
+// Configuração do Express
+const app = express();
+const port = 3002;
 
-    // Define os tipos MIME
-    const mimeTypes = {
-        '.html': 'text/html',
-        '.js': 'text/javascript',
-        '.css': 'text/css',
-        '.json': 'application/json',
-        '.png': 'image/png',
-        '.jpg': 'image/jpg',
-        '.gif': 'image/gif',
-        '.svg': 'image/svg+xml',
-        '.woff': 'application/font-woff',
-        '.ttf': 'application/font-ttf',
-        '.eot': 'application/vnd.ms-fontobject',
-        '.otf': 'application/font-otf'
-    };
+// Middleware de compressão
+app.use(compression());
 
-    // Pega a extensão do arquivo
-    const extname = String(path.extname(filePath)).toLowerCase();
-    const contentType = mimeTypes[extname] || 'application/octet-stream';
+// Servir arquivos estáticos com cache
+app.use(express.static(path.join(__dirname), {
+    maxAge: '1y',
+    etag: true
+}));
 
-    // Verifica se o arquivo está em cache
-    if (fileCache.has(filePath)) {
-        res.writeHead(200, { 
-            'Content-Type': contentType,
-            'X-Cache': 'HIT'
-        });
-        res.end(fileCache.get(filePath));
-        return;
-    }
+// Pool de Workers
+const numCPUs = os.cpus().length;
+const workers = new Map();
 
-    // Lê o arquivo
-    fs.readFile(filePath, (error, content) => {
-        if (error) {
-            if (error.code === 'ENOENT') {
-                // Página não encontrada
-                fs.readFile('./404.html', function(error, content) {
-                    res.writeHead(404, { 'Content-Type': 'text/html' });
-                    res.end(content, 'utf-8');
-                });
-            } else {
-                // Erro do servidor
-                res.writeHead(500);
-                res.end('Erro do servidor: ' + error.code);
-            }
-        } else {
-            // Armazena em cache se for um arquivo estático
-            if (extname !== '.html') {
-                fileCache.set(filePath, content);
-            }
+for (let i = 0; i < numCPUs; i++) {
+    const worker = new Worker('./worker.js');
+    workers.set(worker.threadId, worker);
+
+    worker.on('message', (result) => {
+        // Processar resultado do worker
+        if (result.type === 'marketData') {
+            broadcastMarketData(result.data);
+        }
+    });
+
+    worker.on('error', (error) => {
+        console.error(`Worker ${worker.threadId} error:`, error);
+    });
+
+    worker.on('exit', (code) => {
+        if (code !== 0) {
+            console.error(`Worker ${worker.threadId} stopped with exit code ${code}`);
+            workers.delete(worker.threadId);
             
-            res.writeHead(200, { 
-                'Content-Type': contentType,
-                'X-Cache': 'MISS'
-            });
-            res.end(content, 'utf-8');
+            // Recriar worker
+            const newWorker = new Worker('./worker.js');
+            workers.set(newWorker.threadId, newWorker);
+        }
+    });
+}
+
+// Configuração do WebSocket
+const wss = new WebSocket.Server({ port: 3003 });
+
+wss.on('connection', (ws) => {
+    ws.isAlive = true;
+
+    ws.on('pong', () => {
+        ws.isAlive = true;
+    });
+
+    ws.on('message', async (message) => {
+        try {
+            const data = JSON.parse(message);
+            
+            // Verificar cache do Redis
+            const cachedData = await redis.get(`market:${data.symbol}`);
+            if (cachedData) {
+                ws.send(cachedData);
+                return;
+            }
+
+            // Distribuir trabalho entre os workers
+            const worker = getNextWorker();
+            worker.postMessage(data);
+        } catch (error) {
+            console.error('WebSocket message error:', error);
         }
     });
 });
 
-const PORT = process.env.PORT || 3002;
-server.listen(PORT, 'localhost', () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}/`);
+// Heartbeat para verificar conexões ativas
+const interval = setInterval(() => {
+    wss.clients.forEach((ws) => {
+        if (ws.isAlive === false) return ws.terminate();
+        ws.isAlive = false;
+        ws.ping(() => {});
+    });
+}, 30000);
+
+wss.on('close', () => {
+    clearInterval(interval);
+});
+
+// Broadcast de dados para todos os clientes
+function broadcastMarketData(data) {
+    wss.clients.forEach((client) => {
+        if (client.readyState === WebSocket.OPEN) {
+            client.send(JSON.stringify(data));
+        }
+    });
+}
+
+// Round-robin para distribuição de trabalho
+let currentWorkerIndex = 0;
+function getNextWorker() {
+    const workerIds = Array.from(workers.keys());
+    const worker = workers.get(workerIds[currentWorkerIndex]);
+    currentWorkerIndex = (currentWorkerIndex + 1) % workerIds.length;
+    return worker;
+}
+
+// Rotas
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/radar', (req, res) => {
+    res.sendFile(path.join(__dirname, 'radar.html'));
+});
+
+// Tratamento de erros
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Algo deu errado!');
+});
+
+// Iniciar servidor
+app.listen(port, () => {
+    console.log(`Servidor rodando em http://localhost:${port}/`);
     console.log('Pressione Ctrl+C para parar o servidor');
 }); 

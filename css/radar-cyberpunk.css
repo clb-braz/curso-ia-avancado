@@ -1,0 +1,319 @@
+/* Variáveis */
+:root {
+    --neon-green: #00ff00;
+    --neon-blue: #00ffff;
+    --neon-red: #ff0033;
+    --neon-purple: #9933ff;
+    --neon-yellow: #ffff00;
+    --dark-bg: #000000;
+    --darker-bg: #0a0a0a;
+    --card-bg: rgba(0, 255, 0, 0.05);
+    --terminal-green: #0f0;
+    --glow-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    --locked-blur: 5px;
+}
+
+/* Efeitos de Texto */
+@keyframes glitch {
+    0% { text-shadow: 2px 2px var(--neon-red); }
+    20% { text-shadow: -2px -2px var(--neon-green); }
+    40% { text-shadow: 3px -3px var(--neon-blue); }
+    60% { text-shadow: -3px 3px var(--neon-red); }
+    80% { text-shadow: 4px 4px var(--neon-green); }
+    100% { text-shadow: -4px -4px var(--neon-blue); }
+}
+
+.loading::after {
+    content: '';
+    width: 40px;
+    height: 40px;
+    border: 3px solid rgba(0, 255, 0, 0.1);
+    border-top-color: var(--neon-green);
+    border-right-color: var(--neon-green);
+    border-radius: 50%;
+    animation: loadingRotate 1.5s ease-in-out infinite;
+    box-shadow: 
+        0 0 10px rgba(0, 255, 0, 0.2),
+        0 0 20px rgba(0, 255, 0, 0.1),
+        inset 0 0 10px rgba(0, 255, 0, 0.2);
+    backdrop-filter: blur(2px);
+}
+
+.loading::before {
+    content: '⚡ Atualizando Dados...';
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--neon-green);
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    position: relative;
+    z-index: 2;
+}
+
+/* Efeito de brilho adicional */
+.loading {
+    position: relative;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.loading::after {
+    z-index: 1;
+}
+
+/* Ajuste para o estado de loading nos cards */
+.token-list.loading {
+    background: rgba(0, 255, 0, 0.05);
+    box-shadow: 
+        0 0 20px rgba(0, 255, 0, 0.1),
+        inset 0 0 30px rgba(0, 255, 0, 0.05);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(0, 255, 0, 0.1);
+}
+
+/* Estilos para mensagens de acesso */
+.hacker-text.alert {
+    color: var(--neon-red);
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--neon-red);
+    animation: glitch 2s infinite;
+}
+
+.hacker-text.warning {
+    color: var(--neon-yellow);
+    font-size: 0.9em;
+    text-shadow: 0 0 8px var(--neon-yellow);
+    opacity: 0.9;
+}
+
+/* Seções bloqueadas */
+.locked {
+    position: relative;
+    margin: 2rem 0;
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(0, 255, 0, 0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+.lock-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--neon-red);
+    font-family: 'Share Tech Mono', monospace;
+    margin-bottom: 1rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 0, 0, 0.1);
+    border-radius: 4px;
+    width: fit-content;
+}
+
+.lock-indicator i {
+    font-size: 1.2rem;
+    animation: pulse 2s infinite;
+}
+
+.blur-overlay {
+    filter: blur(var(--locked-blur));
+    pointer-events: none;
+    user-select: none;
+    opacity: 0.7;
+    transition: all 0.3s ease;
+}
+
+.locked:hover .blur-overlay {
+    filter: blur(calc(var(--locked-blur) * 0.7));
+    opacity: 0.8;
+}
+
+/* Cards */
+.opportunity-card, .signal-card {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--neon-purple);
+    padding: 1.5rem;
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+}
+
+.opportunity-card:hover, .signal-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(153, 51, 255, 0.2);
+    border-color: var(--neon-purple);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(153, 51, 255, 0.2);
+}
+
+.token-name {
+    color: var(--neon-purple);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1.1rem;
+    text-shadow: 0 0 10px rgba(153, 51, 255, 0.3);
+}
+
+.token-status {
+    background: rgba(153, 51, 255, 0.2);
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    color: var(--neon-purple);
+    font-family: 'Share Tech Mono', monospace;
+}
+
+.progress-bar {
+    height: 4px;
+    background: rgba(153, 51, 255, 0.1);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+}
+
+.progress {
+    height: 100%;
+    background: var(--neon-purple);
+    box-shadow: 0 0 10px var(--neon-purple);
+    animation: progressPulse 2s ease-in-out infinite;
+}
+
+/* Decodificador de Tendências */
+.decoder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+}
+
+.signal-card {
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid var(--neon-red);
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.signal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.signal-type {
+    color: var(--neon-red);
+    font-family: 'Share Tech Mono', monospace;
+    animation: glitch 2s infinite;
+}
+
+/* Sistema de Alertas */
+.alerts-container {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid var(--neon-green);
+}
+
+.alert-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.alert-option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--neon-green);
+}
+
+/* Botão de Upgrade */
+.upgrade-section {
+    text-align: center;
+    margin: 4rem 0;
+    padding: 2rem;
+    background: linear-gradient(45deg, rgba(0,0,0,0.8), rgba(153,51,255,0.1));
+    border-radius: 10px;
+}
+
+.upgrade-button {
+    background: linear-gradient(45deg, var(--neon-purple), var(--neon-blue));
+    border: none;
+    padding: 1rem 2rem;
+    border-radius: 5px;
+    color: var(--dark-bg);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.upgrade-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(153, 51, 255, 0.5);
+}
+
+/* Animações */
+@keyframes progressPulse {
+    0% { opacity: 0.6; transform: scaleX(0.98); }
+    50% { opacity: 1; transform: scaleX(1); }
+    100% { opacity: 0.6; transform: scaleX(0.98); }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0.6; transform: scale(0.98); }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .market-intelligence,
+    .opportunities-grid,
+    .decoder-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .terminal-content {
+        height: 200px;
+    }
+
+    .upgrade-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .locked {
+        padding: 1.5rem;
+    }
+
+    .opportunity-card, .signal-card {
+        padding: 1rem;
+    }
+
+    .token-status {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.8rem;
+    }
+}

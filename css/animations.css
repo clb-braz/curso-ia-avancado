@@ -1,0 +1,159 @@
+/* Animação de pulso suave para o texto de atualização */
+@keyframes softPulse {
+    0% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.02);
+    }
+    100% {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+}
+
+/* Ajuste do texto de atualização */
+.loading::before {
+    animation: softPulse 2s ease-in-out infinite;
+}
+
+/* Animações mais suaves */
+@keyframes scanline {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+.scanline {
+    animation: scanline 6s linear infinite !important;
+}
+
+.sector-card::before {
+    animation: scanline 6s linear infinite !important;
+}
+
+/* Ajuste do efeito de glitch */
+@keyframes glitch {
+    0% { text-shadow: 2px 2px var(--neon-red); }
+    20% { text-shadow: -2px -2px var(--neon-green); }
+    40% { text-shadow: 3px -3px var(--neon-blue); }
+    60% { text-shadow: -3px 3px var(--neon-red); }
+    80% { text-shadow: 4px 4px var(--neon-green); }
+    100% { text-shadow: -4px -4px var(--neon-blue); }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.6; transform: scale(0.98); }
+    50% { opacity: 1; transform: scale(1); }
+    100% { opacity: 0.6; transform: scale(0.98); }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes loadingRotate {
+    0% { transform: rotate(0deg) scale(1); }
+    50% { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+/* Classes de Animação */
+.fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+.glitch {
+    animation: glitch 2s infinite;
+}
+
+/* Efeitos de Hover */
+.sector-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.sector-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 255, 170, 0.2);
+    border-color: var(--neon-green);
+}
+
+.token-item {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.token-item:hover {
+    background: rgba(0, 255, 170, 0.1);
+    transform: translateX(5px);
+}
+
+.upgrade-button {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.upgrade-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(153, 51, 255, 0.5);
+}
+
+/* Loading Animation */
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 40px;
+    height: 40px;
+    margin: -20px 0 0 -20px;
+    border: 3px solid transparent;
+    border-top-color: var(--neon-green);
+    border-right-color: var(--neon-green);
+    border-radius: 50%;
+    animation: loadingRotate 1.5s ease-in-out infinite;
+    box-shadow: 
+        0 0 10px rgba(0, 255, 0, 0.2),
+        0 0 20px rgba(0, 255, 0, 0.1),
+        inset 0 0 10px rgba(0, 255, 0, 0.2);
+}
+
+/* Matrix Background Animation */
+@keyframes matrixRain {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 0% 100%;
+    }
+}
+
+.matrix-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg,
+        rgba(0, 255, 0, 0.1) 0%,
+        rgba(0, 255, 0, 0.05) 50%,
+        rgba(0, 255, 0, 0) 100%
+    );
+    animation: matrixRain 20s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+} 
